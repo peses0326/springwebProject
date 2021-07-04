@@ -18,10 +18,10 @@
 
         function getMessages() {
             $('#cards-box').empty();
-            let x = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
+            let idx = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
             $.ajax({
                 type: "GET",
-                url: `/api/contents/${id}`,
+                url: `/api/contents/${idx}`,
                 data: {},
                 success: function (response) {
                     console.log(response);
@@ -42,21 +42,20 @@
         }
 
         function makeMessage(id, name, title, contents, modifiedAt) {
-            return `<a href="modify.html?id=${id}">
-                        <div class="card">
-                            <div class="metadata">
-                               <div id="${id}-name" class="name">
-                                   ${name}
-                               </div>
-                               <div class="date">
-                                   ${modifiedAt}
-                               </div>
-                            </div>
-                        <h2 class='title' id="${id}-title">"${title}"</h2>
-                            <div class="contents" id="${id}-contents" >
-                               ${contents}
-                            </div>
-                        </div></a>`;
+            return `<div class="card">
+                        <div class="metadata">
+                           <div id="${id}-name" class="name">
+                               ${name}
+                           </div>
+                           <div class="date">
+                               ${modifiedAt}
+                           </div>
+                        </div>
+                    <h2 class='title' id="${id}-title">"${title}"</h2>
+                        <div class="contents" id="${id}-contents" >
+                           ${contents}
+                        </div>
+                    </div>`;
         }
 
     </script>

@@ -151,7 +151,7 @@
             font-size: 20px;
             position: relative;
             margin-left: 450px;
-            margin-top: 100px;
+            margin-top: 130px;
             margin-bottom: 50px;
             border-radius: 20px;
         }
@@ -175,7 +175,7 @@
         }
 
         .header {
-            margin-top: 170px;
+            margin-top: 70px;
         }
 
         .header h2 {
@@ -189,7 +189,7 @@
             letter-spacing: -0.5px;
             text-align: center;
             color: #ffffff;
-            margin-top: 100px;
+            margin-top: 40px;
         }
 
         .header p {
@@ -256,13 +256,12 @@
         }
 
         .card .metadata .date {
-
+            position: absolute;
+            right: 20px;
         }
 
-        .card .metadata .name {
-            margin-right: 50px;
-
-        }
+        /*.card .metadata .name {*/
+        /*}*/
 
         .contents {
             padding: 0px 23px;
@@ -329,6 +328,13 @@
             text-decoration: none;
             color: #000000;
         }
+        #logout-text{
+            text-decoration: none;
+            color: #FFA547;
+            display: block;
+            text-align: right;
+            font-size: 30px;
+        }
 
     </style>
 
@@ -342,7 +348,11 @@
 </div>
 <div class="wrap">
     <div class="header">
+        <a id="logout-text" href="/user/logout">
+            로그아웃
+        </a>
         <h2>항해99 바다 위 대나무숲<br><br>
+            <span th:text="${username}"></span> 님,<br><br>
             맘껏 외치세요 무야호!</h2>
     </div>
     <div class="to-write">
@@ -364,7 +374,7 @@
                     dsafnkalfklewakflekelafkleajfkleafkldsankflenwaklfnekwlafneklwanfkelawnfkelanfkleanfklew
                 </div>
                 <div id="1-editarea" class="edit">
-                    <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>
+<!-- 여기 왜 Thymleaf 에러나요???                    <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>-->
                 </div>
             </div>
 
@@ -373,3 +383,4 @@
 </div>
 </body>
 </html>
+
