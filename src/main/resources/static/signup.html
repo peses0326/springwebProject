@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
   <meta charset="UTF-8">
   <title>회원가입 페이지</title>
   <script>
@@ -25,11 +27,27 @@
       }
     }
   </script>
+  <style>
+    body {
+      background-color: #1E3E7C;
+    }
+
+    #login-title {
+      font-family: 'Jua', sans-serif !important;
+      text-align: center;
+    }
+
+    #login-title span{
+      font-size: 50px;
+      font-family: 'Jua', sans-serif !important;
+    }
+
+  </style>
 </head>
 <body>
 <div id="login-form">
-  <div id="login-title">Sign up Select Shop</div>
-
+  <div id="login-title">Sign up<br><br><span>대나무숲</span></div>
+  <div><br><br><br></div>
   <form action="/user/signup" method="post">
     <div class="login-id-label">Username</div>
     <input type="text" name="username" placeholder="Username" class="login-input-box">

@@ -1,17 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <title>바다 위 대나무 숲</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
-
-    <title>바다 위 대나무 숲</title>
     <!--    font-family: 'Jua', sans-serif;-->
+
     <script>
         $(document).ready(function () {
             getMessages();
@@ -19,20 +18,20 @@
 
         function getMessages() {
             $('#cards-box').empty();
+            let x = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
             $.ajax({
                 type: "GET",
-                url: "/api/contents",
+                url: `/api/contents/${id}`,
                 data: {},
                 success: function (response) {
-                    for (let i = 0; i < response.length; i++) {
-                        let post = response[i];
-                        let id = post.id;
-                        let name = post.name;
-                        let title = post.title;
-                        let contents = post.contents;
-                        let modifiedAt = post.modifiedAt;
-                        addHTML(id, name, title, contents, modifiedAt);
-                    }
+                    console.log(response);
+                    let post = response;
+                    let id = post.id;
+                    let name = post.name;
+                    let title = post.title;
+                    let contents = post.contents;
+                    let modifiedAt = post.modifiedAt;
+                    addHTML(id, name, title, contents, modifiedAt);
                 }
             });
         }
@@ -43,7 +42,7 @@
         }
 
         function makeMessage(id, name, title, contents, modifiedAt) {
-            return `<a href="detail.html?id=${id}">
+            return `<a href="modify.html?id=${id}">
                         <div class="card">
                             <div class="metadata">
                                <div id="${id}-name" class="name">
@@ -60,62 +59,8 @@
                         </div></a>`;
         }
 
-
-        function editPost(id) {
-
-            let contents = $(`#${id}-contents`).text().trim();
-            $(`#${id}-textarea`).val(contents);
-        }
-
-        function showEdits(id) {
-            $(`#${id}-editarea`).show();
-            $(`#${id}-submit`).show();
-            $(`#${id}-delete`).show();
-
-            $(`#${id}-contents`).hide();
-            $(`#${id}-edit`).hide();
-        }
-
-        function hideEdits(id) {
-            $(`#${id}-editarea`).hide();
-            $(`#${id}-submit`).hide();
-            $(`#${id}-delete`).hide();
-
-            $(`#${id}-contents`).show();
-            $(`#${id}-edit`).show();
-        }
-
-        function submitEdit(id) {
-            let name = $(`#${id}-name`).text().trim();
-            let contents = $(`#${id}-textarea`).val().trim();
-            if (isValidContents(contents) == false) {
-                return;
-            }
-            let data = {'name': name, 'contents': contents};
-
-            $.ajax({
-                type: "PUT",
-                url: `/api/memos/${id}`,
-                contentType: "application/json",
-                data: JSON.stringify(data),
-                success: function (response) {
-                    alert('메시지 변경에 성공하였습니다.');
-                    window.location.reload();
-                }
-            });
-        }
-
-        function deleteOne(id) {
-            $.ajax({
-                type: "DELETE",
-                url: `/api/memos/${id}`,
-                success: function (response) {
-                    alert('메시지 삭제에 성공하였습니다.');
-                    window.location.reload();
-                }
-            })
-        }
     </script>
+
     <style>
         @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
 
@@ -260,7 +205,7 @@
         }
 
         .card .metadata .name {
-            margin-right: 50px;
+            margin-right: 250px;
 
         }
 
@@ -318,7 +263,7 @@
         }
 
         #cards-box {
-            margin-top: 12px;
+            margin-top: 150px;
         }
 
         .card h2 {
@@ -329,13 +274,12 @@
             text-decoration: none;
             color: #000000;
         }
-
     </style>
-
 </head>
 
 <body>
 <div class="background-header">
+
 </div>
 <div class="background-body">
 
@@ -345,11 +289,10 @@
         <h2>항해99 바다 위 대나무숲<br><br>
             맘껏 외치세요 무야호!</h2>
     </div>
-    <div class="to-write">
-        <button type="button" class="btn btn-primary" onclick="location.href='write.html'"><b>글 쓰 기</b></button>
-    </div>
+
     <div id="cards-box" class="area-read">
         <div class="card">
+            <!-- date/name 영역 -->
             <div class="metadata">
                 <div class="date">
                     October 10, 2020
@@ -358,6 +301,8 @@
                     anonymous
                 </div>
             </div>
+            <!-- contents 조회/수정 영역-->
+
             <h2>asd</h2>
             <div class="contents">
                 <div id="1-contents" class="text">
@@ -367,9 +312,15 @@
                     <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>
                 </div>
             </div>
-
+            <!-- 버튼 영역-->
+            <div class="footer">
+                <img id="1-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('1')">
+                <img id="1-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('1')">
+                <img id="1-submit" class="icon-end-edit" src="images/done.png" alt="" onclick="submitEdit('1')">
+            </div>
         </div>
     </div>
 </div>
 </body>
+
 </html>
