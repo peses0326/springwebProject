@@ -55,7 +55,81 @@
                         <div class="contents" id="${id}-contents" >
                            ${contents}
                         </div>
+                        <div class="footer">
+                            <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')">
+                            <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('${id}')">
+                        </div>
                     </div>`;
+        }
+
+        function getReplies() {
+            $('#cards-box').empty();
+            let idx = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
+            $.ajax({
+                type: "GET",
+                url: `/api/contents/${idx}`,
+                data: {},
+                success: function (response) {
+                    console.log(response);
+                    let post = response;
+                    let id = post.id;
+                    let name = post.name;
+                    let title = post.title;
+                    let contents = post.contents;
+                    let modifiedAt = post.modifiedAt;
+                    addHTML(id, name, title, contents, modifiedAt);
+                }
+            });
+        }
+        function isValidContents(contents) {
+            if (contents == '') {
+                alert('내용을 입력해주세요');
+                return false;
+            }
+            return true;
+        }
+
+        function writeReply() {
+            let contents = $('#contents').val();
+            let name = $('#name').val();
+            let title = $('#title').val();
+            if (isValidContents(contents) == false) {
+                return;
+            }
+            if (isValidContents(name) == false) {
+                return;
+            }
+            if (isValidContents(title) == false) {
+                return;
+            }
+
+            let data = {'title': title, 'name': name, 'contents': contents};
+            $.ajax({
+                type: "POST",
+                url: "/api/reply",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('메시지가 성공적으로 작성되었습니다.');
+                    location.href = 'index.html';
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status);
+                    alert(thrownError);
+                }
+            });
+        }
+
+
+        function deleteOne(id) {
+            $.ajax({
+                type: "DELETE",
+                url: `/api/contents/${id}`,
+                success: function (response) {
+                    alert('메시지 삭제에 성공하였습니다.');
+                    window.location.replace("/");
+                }
+            })
         }
 
     </script>
@@ -153,7 +227,7 @@
 
         textarea.field {
             width: 502px !important;
-            height: 146px;
+            height: 46px;
             border-radius: 5px;
             background-color: #ffffff;
             border: none;
@@ -173,6 +247,15 @@
             letter-spacing: -0.96px;
             text-align: left;
             color: #868e96;
+        }
+
+        .area-write img {
+            cursor: pointer;
+            position: relative;
+            width: 22.2px;
+            height: 18.7px;
+            bottom: 50px;
+            left: 500px;
         }
 
         .card {
@@ -318,6 +401,11 @@
                 <img id="1-submit" class="icon-end-edit" src="images/done.png" alt="" onclick="submitEdit('1')">
             </div>
         </div>
+    </div>
+    <div class="area-write">
+        <textarea class="field" placeholder="댓글을 입력해주세요" name="contents" id="contents" cols="30"
+                  rows="3"></textarea>
+        <img src="images/send.png" alt="" onclick="writeReply()">
     </div>
 </div>
 </body>
