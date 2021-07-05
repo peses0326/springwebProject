@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -53,16 +54,20 @@
                                    ${modifiedAt}
                                </div>
                             </div>
-                        <h2 class='title' id="${id}-title">"${title}"</h2>
+                            <h2 class='title' id="${id}-title">"${title}"</h2>
                             <div class="contents" id="${id}-contents" >
                                ${contents}
                             </div>
-                        </div></a>`;
+                    </a>
+                            <div class="footer">
+                                <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')">
+                                <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('${id}')">
+                            </div>
+                        </div>`;
         }
 
 
         function editPost(id) {
-
             let contents = $(`#${id}-contents`).text().trim();
             $(`#${id}-textarea`).val(contents);
         }
@@ -95,7 +100,7 @@
 
             $.ajax({
                 type: "PUT",
-                url: `/api/memos/${id}`,
+                url: `/api/contents/${id}`,
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success: function (response) {
@@ -108,7 +113,7 @@
         function deleteOne(id) {
             $.ajax({
                 type: "DELETE",
-                url: `/api/memos/${id}`,
+                url: `/api/contents/${id}`,
                 success: function (response) {
                     alert('메시지 삭제에 성공하였습니다.');
                     window.location.reload();
@@ -142,17 +147,21 @@
         }
 
         .to-write {
-            margin-bottom: 0;
+            margin-bottom: 250px;
+        }
+
+        li {
+            list-style: none;
         }
 
         .to-write button {
+            float: right;
+            position: relative;
             padding: 10px;
             width: 150px;
             font-size: 20px;
-            position: relative;
             margin-left: 450px;
-            margin-top: 130px;
-            margin-bottom: 50px;
+            margin-top: 120px;
             border-radius: 20px;
         }
 
@@ -328,13 +337,15 @@
             text-decoration: none;
             color: #000000;
         }
-        #logout-text{
+
+        #logout-text, #login-text, #signup-text {
             text-decoration: none;
             color: #FFA547;
             display: block;
             text-align: right;
             font-size: 30px;
         }
+
 
     </style>
 
@@ -348,15 +359,24 @@
 </div>
 <div class="wrap">
     <div class="header">
-        <a id="logout-text" href="/user/logout">
+        <a sec:authorize="isAuthenticated()" id="logout-text" href="/user/logout">
             로그아웃
         </a>
+        <a sec:authorize="!isAuthenticated()" id="login-text" href="/user/login">
+            로그인
+        </a>
+        <a sec:authorize="!isAuthenticated()" id="signup-text" href="/user/signup">
+            회원가입
+        </a>
         <h2>항해99 바다 위 대나무숲<br><br>
-            <span th:text="${username}"></span> 님,<br><br>
-            맘껏 외치세요 무야호!</h2>
+            <li sec:authorize="isAuthenticated()"><span th:text="${username}"></span> 님,<br><br></li>
+            맘껏 외치세요 무야호!
+        </h2>
     </div>
     <div class="to-write">
-        <button type="button" class="btn btn-primary" onclick="location.href='write.html'"><b>글 쓰 기</b></button>
+        <li sec:authorize="isAuthenticated()">
+            <button type="button" class="btn btn-primary" onclick="location.href='write.html'"><b>글 쓰 기</b></button>
+        </li>
     </div>
     <div id="cards-box" class="area-read">
         <div class="card">
@@ -374,7 +394,7 @@
                     dsafnkalfklewakflekelafkleajfkleafkldsankflenwaklfnekwlafneklwanfkelawnfkelanfkleanfklew
                 </div>
                 <div id="1-editarea" class="edit">
-<!-- 여기 왜 Thymleaf 에러나요???                    <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>-->
+                    <!-- 여기 왜 Thymleaf 에러나요???                    <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>-->
                 </div>
             </div>
 
