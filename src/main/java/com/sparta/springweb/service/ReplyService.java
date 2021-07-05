@@ -14,6 +14,14 @@ public class ReplyService {
 
     private final ReplyRepository ReplyRepository;
 
+    @Transactional // 메소드 동작이 SQL 쿼리문임을 선언합니다.
+    public Reply createReply(ReplyRequestDto requestDto, Long userId ) {
+        // 요청받은 DTO 로 DB에 저장할 객체 만들기
+        Reply reply = new Reply(requestDto, userId);
+        ReplyRepository.save(reply);
+        return reply;
+    }
+
     @Transactional
     public Long update(Long id, ReplyRequestDto requestDto) {
         Reply Reply = ReplyRepository.findById(id).orElseThrow(
