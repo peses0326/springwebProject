@@ -11,9 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <!--    font-family: 'Jua', sans-serif;-->
 
-    <script>
+    <script th:inline="javascript">
         $(document).ready(function () {
             getMessages();
+            getReplies();
         })
 
         function getMessages() {
@@ -64,23 +65,50 @@
 
         function getReplies() {
             $('#cards-box').empty();
+            var username = [[${username}]];
             let idx = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
             $.ajax({
                 type: "GET",
-                url: `/api/contents/${idx}`,
+                url: `/api/reply/${idx}`,
                 data: {},
                 success: function (response) {
                     console.log(response);
                     let post = response;
                     let id = post.id;
-                    let name = post.name;
-                    let title = post.title;
-                    let contents = post.contents;
+                    let postid = post.postid;
+                    let username = post.username;
+                    let reply = post.reply;
                     let modifiedAt = post.modifiedAt;
-                    addHTML(id, name, title, contents, modifiedAt);
+                    addReplyHTML(id, username, reply, modifiedAt);
                 }
             });
         }
+
+        function addReplyHTML(id, username, reply, modifiedAt) {
+            let tempHtml = makeReply(id, username, reply, modifiedAt);
+            $('#reply-box').append(tempHtml);
+        }
+
+        function makeReply(id, username, reply, modifiedAt) {
+            return `<div class="reply">
+                        <div class="metadata">
+                           <div id="${id}-name" class="name">
+                               ${username}
+                           </div>
+                           <div class="date">
+                               ${modifiedAt}
+                           </div>
+                        </div>
+                        <div class="contents" id="${id}-contents" >
+                           ${reply}
+                        </div>
+                        <div class="footer">
+                            <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')">
+                            <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('${id}')">
+                        </div>
+                    </div>`;
+        }
+
         function isValidContents(contents) {
             if (contents == '') {
                 alert('내용을 입력해주세요');
@@ -90,20 +118,14 @@
         }
 
         function writeReply() {
-            let contents = $('#contents').val();
-            let name = $('#name').val();
-            let title = $('#title').val();
-            if (isValidContents(contents) == false) {
-                return;
-            }
-            if (isValidContents(name) == false) {
-                return;
-            }
-            if (isValidContents(title) == false) {
+            let postid = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
+            var username = [[${username}]];
+            let reply = $('#reply').val();
+            if (isValidContents(reply) == false) {
                 return;
             }
 
-            let data = {'title': title, 'name': name, 'contents': contents};
+            let data = {'postid':postid ,'username': username, 'reply': reply};
             $.ajax({
                 type: "POST",
                 url: "/api/reply",
@@ -111,20 +133,19 @@
                 data: JSON.stringify(data),
                 success: function (response) {
                     alert('메시지가 성공적으로 작성되었습니다.');
-                    location.href = 'index.html';
+                    window.location.reload();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr.status);
-                    alert(thrownError);
+                    window.location.href("user/login");
+                    alert('로그인을 해주셈>_<');
                 }
             });
         }
 
-
         function deleteOne(id) {
             $.ajax({
                 type: "DELETE",
-                url: `/api/contents/${id}`,
+                url: `/api/reply/${id}`,
                 success: function (response) {
                     alert('메시지 삭제에 성공하였습니다.');
                     window.location.replace("/");
@@ -283,13 +304,12 @@
         }
 
         .card .metadata .date {
-
+            position: absolute;
+            right: 20px;
         }
 
-        .card .metadata .name {
-            margin-right: 250px;
-
-        }
+        /*.card .metadata .name {*/
+        /*}*/
 
         .contents {
             padding: 0px 23px;
@@ -314,6 +334,7 @@
         .footer {
             position: relative;
             height: 40px;
+            top: 15px;
         }
 
         .footer img.icon-start-edit {
@@ -391,7 +412,7 @@
                     dsafnkalfklewakflekelafkleajfkleafkldsankflenwaklfnekwlafneklwanfkelawnfkelanfkleanfklew
                 </div>
                 <div id="1-editarea" class="edit">
-                    <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>
+<!--                    <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>-->
                 </div>
             </div>
             <!-- 버튼 영역-->
@@ -403,11 +424,30 @@
         </div>
     </div>
     <div class="area-write">
-        <textarea class="field" placeholder="댓글을 입력해주세요" name="contents" id="contents" cols="30"
+        <textarea class="field" placeholder="댓글을 입력해주세요" name="reply" id="reply" cols="30"
                   rows="3"></textarea>
         <img src="images/send.png" alt="" onclick="writeReply()">
     </div>
+    <div id="reply-box" class="area-read">
+        <div class="card">
+            <div class="metadata">
+                <div id="${id}-name" class="name">
+                    ${name}
+                </div>
+                <div class="date">
+                    ${modifiedAt}
+                </div>
+            </div>
+            <div class="contents" id="${id}-contents">
+                ${contents}
+            </div>
+            </a>
+            <div class="footer">
+                <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')">
+                <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('${id}')">
+            </div>
+        </div>
+    </div>
 </div>
 </body>
-
 </html>

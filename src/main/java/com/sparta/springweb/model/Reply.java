@@ -20,25 +20,26 @@ public class Reply extends Timestamped {
     private Long postid;
 
     @Column(nullable = false)
-    private String name;
+    private String username;
 
     @Column(nullable = false)
     private String reply;
 
-    public Reply(Long postid, String name, String reply) {
-        this.name = name;
+    public Reply(Long postid, String username, String reply) {
+        this.postid = postid;
+        this.username = username;
         this.reply = reply;
     }
 
     public Reply(ReplyRequestDto requestDto) {
         this.postid = requestDto.getPostid();
-        this.name = requestDto.getName();
+        this.username = requestDto.getUsername();
         this.reply = requestDto.getReply();
     }
 
     public void update(ReplyRequestDto requestDto) {
         this.postid = requestDto.getPostid();
-        this.name = requestDto.getName();
+        this.username = requestDto.getUsername();
         this.reply = requestDto.getReply();
     }
 }

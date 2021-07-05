@@ -1,7 +1,9 @@
 package com.sparta.springweb.controller;
 
 import com.sparta.springweb.dto.ReplyRequestDto;
+import com.sparta.springweb.model.Contents;
 import com.sparta.springweb.model.Reply;
+import com.sparta.springweb.repository.ContentsRepository;
 import com.sparta.springweb.repository.ReplyRepository;
 import com.sparta.springweb.service.ReplyService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,20 @@ public class ReplyRestController {
     public List<Reply> getReply() {
         return ReplyRepository.findAllByOrderByCreatedAtDesc();
     }
+
+//    @GetMapping("/api/reply/{postid}")
+//    public List<Reply> getReply(@PathVariable Long postid) {
+//        Reply reply =  ReplyRepository.findAllById(postid);
+//        return reply;
+//    }
+
+//    @GetMapping("/api/contents/{id}")
+//    public Contents getContents(@PathVariable Long id) {
+//        Contents contents =  ContentsRepository.findById(id).orElseThrow(
+//                ()->new IllegalArgumentException(" "));
+//        return contents;
+//    }
+
 
     @PostMapping("/api/reply")
     public Reply createReply(@RequestBody ReplyRequestDto requestDto) {

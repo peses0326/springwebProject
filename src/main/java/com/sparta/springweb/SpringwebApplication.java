@@ -30,5 +30,4 @@ public class SpringwebApplication {
             repository.save(new Contents("항해99", "선원1", "어푸어푸"));
         };
     }
-
 }
