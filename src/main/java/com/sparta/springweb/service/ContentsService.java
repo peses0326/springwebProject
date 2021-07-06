@@ -1,8 +1,11 @@
 package com.sparta.springweb.service;
 
+import com.sparta.springweb.dto.ReplyRequestDto;
 import com.sparta.springweb.model.Contents;
 import com.sparta.springweb.dto.ContentsRequestDto;
+import com.sparta.springweb.model.Reply;
 import com.sparta.springweb.repository.ContentsRepository;
+import com.sparta.springweb.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +16,14 @@ import javax.transaction.Transactional;
 public class ContentsService {
 
     private final ContentsRepository ContentsRepository;
+
+    @Transactional // 메소드 동작이 SQL 쿼리문임을 선언합니다.
+    public Contents createContents(ContentsRequestDto requestDto, String username) {
+        // 요청받은 DTO 로 DB에 저장할 객체 만들기
+        Contents contents = new Contents(requestDto, username);
+        ContentsRepository.save(contents);
+        return contents;
+    }
 
     @Transactional
     public Long update(Long id, ContentsRequestDto requestDto) {

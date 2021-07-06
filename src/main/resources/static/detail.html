@@ -138,13 +138,12 @@
                     window.location.reload();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert('로그인을 해주셈>_<');
+                    alert('로그인을 해주세요>_<');
                     window.location.replace("/user/login");
                 }
             });
         }
         function deleteOne(id) {
-            deleteAllReply(id)
             $.ajax({
                 type: "DELETE",
                 url: `/api/contents/${id}`,

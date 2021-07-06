@@ -4,8 +4,10 @@ package com.sparta.springweb.controller;
 import com.sparta.springweb.dto.ContentsRequestDto;
 import com.sparta.springweb.model.Contents;
 import com.sparta.springweb.repository.ContentsRepository;
+import com.sparta.springweb.security.UserDetailsImpl;
 import com.sparta.springweb.service.ContentsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,10 +32,17 @@ public class ContentsRestController {
         return contents;
     }
 
+//    @PostMapping("/api/contents")
+//    public Contents createContents(@RequestBody ContentsRequestDto requestDto) {
+//        Contents Contents = new Contents(requestDto);
+//        return ContentsRepository.save(Contents);
+//    }
     @PostMapping("/api/contents")
-    public Contents createContents(@RequestBody ContentsRequestDto requestDto) {
-        Contents Contents = new Contents(requestDto);
-        return ContentsRepository.save(Contents);
+    public Contents createContents(@RequestBody ContentsRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        // 로그인 되어 있는 ID의 username
+        String username = userDetails.getUser().getUsername();
+        Contents contents = ContentsService.createContents(requestDto, username);
+        return contents;
     }
 
     @PutMapping("/api/contents/{id}")

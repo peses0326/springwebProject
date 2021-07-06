@@ -21,19 +21,15 @@
 
         function writePost() {
             let contents = $('#contents').val();
-            let name = $('#name').val();
             let title = $('#title').val();
             if (isValidContents(contents) == false) {
-                return;
-            }
-            if (isValidContents(name) == false) {
                 return;
             }
             if (isValidContents(title) == false) {
                 return;
             }
 
-            let data = {'title': title, 'name': name, 'contents': contents};
+            let data = {'title': title, 'contents': contents};
             $.ajax({
                 type: "POST",
                 url: "/api/contents",
@@ -44,8 +40,8 @@
                     location.href = 'index.html';
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr.status);
-                    alert(thrownError);
+                    alert('로그인을 해주세요>_<');
+                    window.location.replace("/user/login");
                 }
             });
         }
@@ -252,7 +248,7 @@
         .form-control {
             height: 30px;
             margin-bottom: 10px;
-            margin-left: 70px;
+            margin-left: 35px;
             border-radius: 10px;
         }
 
@@ -276,7 +272,7 @@
     <div class="area-write">
         <div class="form-floating mb-3">
             <input type="title" class="form-control" id="title" placeholder="제 목">
-            <input type="name" class="form-control" id="name" placeholder="닉네임">
+            <!--            <input type="name" class="form-control" id="name" placeholder="닉네임">-->
         </div>
         <textarea class="field" placeholder="공유하고 싶은 소식을 입력해주세요" name="contents" id="contents" cols="30"
                   rows="10"></textarea>
