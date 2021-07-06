@@ -17,6 +17,7 @@
             getReplies();
         })
 
+        // 게시글을 불러옵니다.
         function getMessages() {
             $('#cards-box').empty();
             $('#reply-box').empty();
@@ -38,11 +39,13 @@
             });
         }
 
+        // 불러온 게시글을 html에 붙여줍니다.
         function addHTML(id, name, title, contents, modifiedAt) {
             let tempHtml = makeMessage(id, name, title, contents, modifiedAt);
             $('#cards-box').append(tempHtml);
         }
 
+        // 게시글 형태를 만들어줍니다.
         function makeMessage(id, name, title, contents, modifiedAt) {
             let loginUsername = [[${username}]];
             let hide = ""
@@ -63,12 +66,27 @@
                            ${contents}
                         </div>
                         <div class="footer ${hide}">
-                            <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')">
                             <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('${id}')">
                         </div>
                     </div>`;
         }
 
+        // 게시글의 id 값을 받아 해당 댓글을 삭제합니다.
+        function deleteOne(id) {
+            if (confirm("정말 삭제하시겠습니까??") == false) {
+                return}
+            $.ajax({
+                type: "DELETE",
+                url: `/api/contents/${id}`,
+                success: function (response) {
+                    alert('메시지 삭제에 성공하였습니다.');
+                    window.location.replace("/");
+                }
+            })
+        }
+
+        <!------- 댓글  -------->
+        // 댓글을 불러옵니다.
         function getReplies() {
             let postId = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
             $.ajax({
@@ -88,11 +106,13 @@
             });
         }
 
+        // 불로온 댓글을 html에 붙여줍니다.
         function addReplyHTML(id, username, reply, modifiedAt) {
             let tempHtml = makeReply(id, username, reply, modifiedAt);
             $('#reply-box').append(tempHtml);
         }
 
+        // 댓글의 형태를 만들어 줍니다.
         function makeReply(id, username, reply, modifiedAt) {
             let loginUsername = [[${username}]];
             console.log(loginUsername)
@@ -123,15 +143,14 @@
                     </div>`;
         }
 
-
-        // 수정 버튼을 눌렀을 때, 기존 작성 내용을 textarea 에 전달합니다.
-        // 숨길 버튼을 숨기고, 나타낼 버튼을 나타냅니다.
+        // 수정 버튼을 눌렀을 때, 기존 작성 내용을 수정박스(textarea)에 전달합니다.
         function editPost(id) {
             showEdits(id);
             let contents = $(`#${id}-reply`).text().trim();
             $(`#${id}-textarea`).val(contents);
         }
 
+        // 숨길 버튼을 숨기고, 나타낼 버튼을 나타냅니다.
         function showEdits(id) {
             $(`#${id}-editarea`).show();
             $(`#${id}-submit`).show();
@@ -141,19 +160,16 @@
             $(`#${id}-edit`).hide();
         }
 
-        // 메모를 수정합니다.
+        // 수정된 댓글을 put 요청 보내 update 합니다.
         function submitEdit(id) {
             // 1. 작성 대상 메모 contents 를 확인합니다
             let reply = $(`#${id}-textarea`).val().trim();
-
             // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
             if (isValidContents(reply) == false) {
                 return;
             }
-
             // 3. 전달할 data JSON으로 만듭니다.
             let data = {"reply": reply};
-
             // 4. PUT /api/memos/{id} 에 data를 전달합니다.
             $.ajax({
                 type: "PUT",
@@ -167,6 +183,7 @@
             });
         }
 
+        // 글이 정상인지 확인
         function isValidContents(contents) {
             if (contents == '') {
                 alert('내용을 입력해주세요');
@@ -175,6 +192,7 @@
             return true;
         }
 
+        // 댓글을 작성하고 post 요청을 보내 저장합니다.
         function writeReply() {
             let postid = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
             var username = [[${username}]];
@@ -205,18 +223,11 @@
             });
         }
 
-        function deleteOne(id) {
-            $.ajax({
-                type: "DELETE",
-                url: `/api/contents/${id}`,
-                success: function (response) {
-                    alert('메시지 삭제에 성공하였습니다.');
-                    window.location.replace("/");
-                }
-            })
-        }
-
+        // 댓글의 id 값을 받아 해당 댓글을 삭제합니다.
         function deleteReply(id) {
+            if (confirm("정말 삭제하시겠습니까??") == false) {
+                return
+            }
             $.ajax({
                 type: "DELETE",
                 url: `/api/reply/${id}`,
@@ -242,6 +253,7 @@
 
         .edit {
             display: none;
+            pardding-left: 23px;
         }
 
         .wrap {
@@ -288,7 +300,7 @@
         }
 
         .header {
-            margin-top: 170px;
+            margin-top: 0;
         }
 
         .header h2 {
@@ -455,7 +467,25 @@
         .hide {
             display: none;
         }
+
+        #logout-text, #login-text, #signup-text {
+            text-decoration: none;
+            color: #FFA547;
+            display: block;
+            text-align: right;
+            font-size: 30px;
+        }
+
+        #home {
+            text-decoration: none;
+            color: #FFA547;
+            display: inline;
+            text-align: right;
+            font-size: 30px;
+            position: absolute;
+        }
     </style>
+
 </head>
 
 <body>
@@ -467,6 +497,16 @@
 </div>
 <div class="wrap">
     <div class="header">
+        <a href="/" id="home">Home</a>
+        <a sec:authorize="isAuthenticated()" id="logout-text" href="/user/logout">
+            로그아웃
+        </a>
+        <a sec:authorize="!isAuthenticated()" id="login-text" href="/user/login">
+            로그인
+        </a>
+        <a sec:authorize="!isAuthenticated()" id="signup-text" href="/user/signup">
+            회원가입
+        </a>
         <h2>항해99 바다 위 대나무숲<br><br>
             맘껏 외치세요 무야호!</h2>
     </div>
@@ -490,7 +530,7 @@
                     dsafnkalfklewakflekelafkleajfkleafkldsankflenwaklfnekwlafneklwanfkelawnfkelanfkleanfklew
                 </div>
                 <div id="1-editarea" class="edit">
-                    <!--                    <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>-->
+                    <!--  <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>-->
                 </div>
             </div>
             <!-- 버튼 영역-->

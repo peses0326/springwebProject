@@ -63,17 +63,6 @@
                         </div>`;
         }
 
-        // <div id="${id}-editarea" className="edit">
-        //     <textarea id="${id}-textarea" className="te-edit" name="" id="" cols="30" rows="5"></textarea>
-        // </div>
-        // <div className="footer">
-        //     <img id="${id}-edit" className="icon-start-edit" src="images/edit.png" alt="" onClick="editPost('${id}')">
-        //         <img id="${id}-delete" className="icon-delete" src="images/delete.png" alt=""
-        //              onClick="deleteOne('${id}')">
-        //             <img id="${id}-submit" className="icon-end-edit" src="images/done.png" alt=""
-        //                  onClick="submitEdit('${id}')">
-        // </div>
-
         function editPost(id) {
             showEdits(id);
             let username = $(`#${id}-username`).text().trim();

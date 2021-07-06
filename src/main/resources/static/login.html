@@ -26,6 +26,9 @@
             font-size: 50px;
             font-family: 'Jua', sans-serif !important;
         }
+        a {
+            text-decoration: none;
+        }
 
     </style>
 </head>
@@ -35,9 +38,8 @@
 <div class="background-body">
 
     <div class="wrap">
-
         <div id="login-form">
-            <div id="login-title">Dive into<br><br><span>대나무숲</span></div>
+            <a href="/"><div id="login-title">Dive into<br><br><span>대나무숲</span></div></a>
             <button id="login-kakao-btn"
                     onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=&redirect_uri=http://localhost:8080/user/kakao/callback&response_type=code'">
                 카카오로 로그인하기

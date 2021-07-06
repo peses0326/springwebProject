@@ -28,8 +28,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
 
-                // 모든 페이지에서 권한 해제
-                .antMatchers("/**").permitAll()
+                // 메인페이지 접근허용
+                .antMatchers("/index/**").permitAll()
+                // 글 조회 접근허용
+                .antMatchers("/detail.html/**").permitAll()
+                // api 요청 접근허용
+                .antMatchers("/api/**").permitAll()
 
                 // 그 외 모든 요청은 인증과정 필요
                 .anyRequest().authenticated()
