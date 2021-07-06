@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -14,8 +15,12 @@ public class ReplyService {
 
     private final ReplyRepository ReplyRepository;
 
+    public List<Reply> getReply(Long postId) {
+        return ReplyRepository.findAllByPostidOrderByCreatedAtDesc(postId);
+    }
+
     @Transactional // 메소드 동작이 SQL 쿼리문임을 선언합니다.
-    public Reply createReply(ReplyRequestDto requestDto, Long userId ) {
+    public Reply createReply(ReplyRequestDto requestDto, Long userId) {
         // 요청받은 DTO 로 DB에 저장할 객체 만들기
         Reply reply = new Reply(requestDto, userId);
         ReplyRepository.save(reply);

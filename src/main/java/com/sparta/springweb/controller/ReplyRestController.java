@@ -22,40 +22,32 @@ public class ReplyRestController {
     private final ReplyService ReplyService;
 
 
+//    @GetMapping("/api/reply")
+//    public List<Reply> getReply() {
+//        return ReplyRepository.findAllByOrderByCreatedAtDesc();
+//    }
+
+    // 로그인한 회원이 등록한 상품들 조회
     @GetMapping("/api/reply")
-    public List<Reply> getReply() {
-        return ReplyRepository.findAllByOrderByCreatedAtDesc();
+    public List<Reply> getReply(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Long userId = userDetails.getUser().getId();
+        return ReplyService.getReply(userId);
+    }
+    // 게시글 id 로 댓글 조회
+    @GetMapping("/api/reply/{postId}")
+    public List<Reply> getReply(@PathVariable Long postId) {
+        return ReplyService.getReply(postId);
     }
 
-//    @GetMapping("/api/reply/{postid}")
-//    public List<Reply> getReply(@PathVariable Long postid) {
-//        Reply reply =  ReplyRepository.findAllById(postid);
-//        return reply;
-//    }
-
-//    @GetMapping("/api/contents/{id}")
-//    public Contents getContents(@PathVariable Long id) {
-//        Contents contents =  ContentsRepository.findById(id).orElseThrow(
-//                ()->new IllegalArgumentException(" "));
-//        return contents;
-//    }
-// 댓글 등록
-
 @PostMapping("/api/reply")
-public Reply createProduct(@RequestBody ReplyRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+public Reply createReply(@RequestBody ReplyRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
     // 로그인 되어 있는 ID
     Long userId = userDetails.getUser().getId();
-
     Reply reply = ReplyService.createReply(requestDto, userId);
     // 응답 보내기
     return reply;
 }
 
-//    @PostMapping("/api/reply")
-//    public Reply createReply(@RequestBody ReplyRequestDto requestDto) {
-//        Reply reply = new Reply(requestDto);
-//        return ReplyRepository.save(reply);
-//    }
 
     @PutMapping("/api/reply/{id}")
     public Long updateReply(@PathVariable Long id, @RequestBody ReplyRequestDto requestDto) {

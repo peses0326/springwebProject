@@ -19,6 +19,7 @@
 
         function getMessages() {
             $('#cards-box').empty();
+            $('#reply-box').empty();
             let idx = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
             $.ajax({
                 type: "GET",
@@ -66,20 +67,21 @@
         function getReplies() {
             $('#cards-box').empty();
             var username = [[${username}]];
-            let idx = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
+            let postId = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
+            console.log(postId)
             $.ajax({
                 type: "GET",
-                url: `/api/reply/${idx}`,
+                url: `/api/reply/${postId}`,
                 data: {},
                 success: function (response) {
-                    console.log(response);
-                    let post = response;
-                    let id = post.id;
-                    let postid = post.postid;
-                    let username = post.username;
-                    let reply = post.reply;
-                    let modifiedAt = post.modifiedAt;
-                    addReplyHTML(id, username, reply, modifiedAt);
+                    for (let i = 0; i < response.length; i++) {
+                        let post = response[i];
+                        let id = post.id;
+                        let username = post.username;
+                        let reply = post.reply;
+                        let modifiedAt = post.modifiedAt;
+                        addReplyHTML(id, username, reply, modifiedAt);
+                    }
                 }
             });
         }
@@ -90,7 +92,7 @@
         }
 
         function makeReply(id, username, reply, modifiedAt) {
-            return `<div class="reply">
+            return `<div class="card">
                         <div class="metadata">
                            <div id="${id}-name" class="name">
                                ${username}
@@ -104,7 +106,7 @@
                         </div>
                         <div class="footer">
                             <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')">
-                            <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('${id}')">
+                            <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteReply('${id}')">
                         </div>
                     </div>`;
         }
@@ -125,7 +127,7 @@
                 return;
             }
 
-            let data = {'postid':postid ,'username': username, 'reply': reply};
+            let data = {'postid': postid, 'username': username, 'reply': reply};
             $.ajax({
                 type: "POST",
                 url: "/api/reply",
@@ -136,19 +138,30 @@
                     window.location.reload();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    window.location.href("user/login");
                     alert('로그인을 해주셈>_<');
+                    window.location.replace("/user/login");
                 }
             });
         }
-
         function deleteOne(id) {
+            deleteAllReply(id)
+            $.ajax({
+                type: "DELETE",
+                url: `/api/contents/${id}`,
+                success: function (response) {
+                    alert('메시지 삭제에 성공하였습니다.');
+                    window.location.replace("/");
+                }
+            })
+        }
+
+        function deleteReply(id) {
             $.ajax({
                 type: "DELETE",
                 url: `/api/reply/${id}`,
                 success: function (response) {
                     alert('메시지 삭제에 성공하였습니다.');
-                    window.location.replace("/");
+                    window.location.reload();
                 }
             })
         }
@@ -412,7 +425,7 @@
                     dsafnkalfklewakflekelafkleajfkleafkldsankflenwaklfnekwlafneklwanfkelawnfkelanfkleanfklew
                 </div>
                 <div id="1-editarea" class="edit">
-<!--                    <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>-->
+                    <!--                    <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>-->
                 </div>
             </div>
             <!-- 버튼 영역-->
