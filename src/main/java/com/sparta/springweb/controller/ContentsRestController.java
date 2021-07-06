@@ -38,7 +38,7 @@ public class ContentsRestController {
 //        return ContentsRepository.save(Contents);
 //    }
     @PostMapping("/api/contents")
-    public Contents createContents(@RequestBody ContentsRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public Contents createContents(@RequestBody ContentsRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 로그인 되어 있는 ID의 username
         String username = userDetails.getUser().getUsername();
         Contents contents = ContentsService.createContents(requestDto, username);

@@ -35,7 +35,6 @@ public class UserService {
             throw new IllegalArgumentException("중복된 사용자 ID 가 존재합니다.");
         }
 
-
         // 사용자 ROLE 확인
         UserRole role = UserRole.USER;
         if (requestDto.isAdmin()) {

@@ -341,7 +341,7 @@ button {
 
 #login-form {
     width: 538px;
-    height: 770px;
+    height: 790px;
     margin: 70px auto 141px auto;
     display: flex;
     flex-direction: column;
@@ -421,8 +421,8 @@ button {
     border-width: 0;
 
     width: 370px !important;
-    height: 52px;
-    margin: 14px 0 0;
+    height: 25px;
+    margin: 10px 0 0;
     border-radius: 5px;
     background-color: #e9ecef;
 }
@@ -831,7 +831,7 @@ input[type=submit] {
 .alert {
     width: 300px;
     margin-top: 22px;
-    padding: 1.75rem 1.25rem;
+    padding: 15px;
     border: 1px solid transparent;
     border-radius: .25rem;
 }
