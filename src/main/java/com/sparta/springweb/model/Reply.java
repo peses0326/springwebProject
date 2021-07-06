@@ -47,10 +47,7 @@ public class Reply extends Timestamped {
         this.userId = userId;
     }
 
-
     public void update(ReplyRequestDto requestDto) {
-        this.postid = requestDto.getPostid();
-        this.username = requestDto.getUsername();
         this.reply = requestDto.getReply();
     }
 }

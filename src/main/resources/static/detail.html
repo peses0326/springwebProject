@@ -44,6 +44,11 @@
         }
 
         function makeMessage(id, name, title, contents, modifiedAt) {
+            let loginUsername = [[${username}]];
+            let hide = ""
+            if (loginUsername != name) {
+                hide = "hide"
+            }
             return `<div class="card">
                         <div class="metadata">
                            <div id="${id}-name" class="name">
@@ -57,7 +62,7 @@
                         <div class="contents" id="${id}-contents" >
                            ${contents}
                         </div>
-                        <div class="footer">
+                        <div class="footer ${hide}">
                             <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')">
                             <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteOne('${id}')">
                         </div>
@@ -65,10 +70,7 @@
         }
 
         function getReplies() {
-            $('#cards-box').empty();
-            var username = [[${username}]];
             let postId = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
-            console.log(postId)
             $.ajax({
                 type: "GET",
                 url: `/api/reply/${postId}`,
@@ -92,6 +94,12 @@
         }
 
         function makeReply(id, username, reply, modifiedAt) {
+            let loginUsername = [[${username}]];
+            console.log(loginUsername)
+            let hide = ""
+            if (loginUsername != username) {
+                hide = "hide"
+            }
             return `<div class="card">
                         <div class="metadata">
                            <div id="${id}-name" class="name">
@@ -101,14 +109,62 @@
                                ${modifiedAt}
                            </div>
                         </div>
-                        <div class="contents" id="${id}-contents" >
+                        <div class="contents" id="${id}-reply" >
                            ${reply}
                         </div>
-                        <div class="footer">
-                            <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onclick="editPost('${id}')">
-                            <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onclick="deleteReply('${id}')">
+                        <div id="${id}-editarea" class="edit">
+                            <textarea id="${id}-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>
                         </div>
+                            <div class="footer ${hide}">
+                                <img id="${id}-edit" class="icon-start-edit" src="images/edit.png" alt="" onClick="editPost('${id}')">
+                                <img id="${id}-delete" class="icon-delete" src="images/delete.png" alt="" onClick="deleteReply('${id}')">
+                                <img id="${id}-submit" class="icon-end-edit" src="images/done.png" alt="" onClick="submitEdit('${id}')">
+                            </div>
                     </div>`;
+        }
+
+
+        // 수정 버튼을 눌렀을 때, 기존 작성 내용을 textarea 에 전달합니다.
+        // 숨길 버튼을 숨기고, 나타낼 버튼을 나타냅니다.
+        function editPost(id) {
+            showEdits(id);
+            let contents = $(`#${id}-reply`).text().trim();
+            $(`#${id}-textarea`).val(contents);
+        }
+
+        function showEdits(id) {
+            $(`#${id}-editarea`).show();
+            $(`#${id}-submit`).show();
+            $(`#${id}-delete`).show();
+
+            $(`#${id}-reply`).hide();
+            $(`#${id}-edit`).hide();
+        }
+
+        // 메모를 수정합니다.
+        function submitEdit(id) {
+            // 1. 작성 대상 메모 contents 를 확인합니다
+            let reply = $(`#${id}-textarea`).val().trim();
+
+            // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
+            if (isValidContents(reply) == false) {
+                return;
+            }
+
+            // 3. 전달할 data JSON으로 만듭니다.
+            let data = {"reply": reply};
+
+            // 4. PUT /api/memos/{id} 에 data를 전달합니다.
+            $.ajax({
+                type: "PUT",
+                url: `/api/reply/${id}`,
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('메시지 변경에 성공하였습니다.');
+                    window.location.reload();
+                }
+            });
         }
 
         function isValidContents(contents) {
@@ -134,8 +190,13 @@
                 contentType: "application/json",
                 data: JSON.stringify(data),
                 success: function (response) {
-                    alert('메시지가 성공적으로 작성되었습니다.');
-                    window.location.reload();
+                    if (response == true) {
+                        alert('메시지가 성공적으로 작성되었습니다.');
+                        window.location.reload();
+                    } else {
+                        alert('로그인을 해주세요>_<');
+                        window.location.replace("/user/login");
+                    }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     alert('로그인을 해주세요>_<');
@@ -143,6 +204,7 @@
                 }
             });
         }
+
         function deleteOne(id) {
             $.ajax({
                 type: "DELETE",
@@ -159,7 +221,7 @@
                 type: "DELETE",
                 url: `/api/reply/${id}`,
                 success: function (response) {
-                    alert('메시지 삭제에 성공하였습니다.');
+                    alert('댓글 삭제에 성공하였습니다.');
                     window.location.reload();
                 }
             })
@@ -178,7 +240,7 @@
             margin: 0px;
         }
 
-        .area-edit {
+        .edit {
             display: none;
         }
 
@@ -388,6 +450,10 @@
         a {
             text-decoration: none;
             color: #000000;
+        }
+
+        .hide {
+            display: none;
         }
     </style>
 </head>

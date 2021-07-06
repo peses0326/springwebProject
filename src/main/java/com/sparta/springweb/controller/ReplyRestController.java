@@ -33,20 +33,23 @@ public class ReplyRestController {
         Long userId = userDetails.getUser().getId();
         return ReplyService.getReply(userId);
     }
+
     // 게시글 id 로 댓글 조회
     @GetMapping("/api/reply/{postId}")
     public List<Reply> getReply(@PathVariable Long postId) {
         return ReplyService.getReply(postId);
     }
 
-@PostMapping("/api/reply")
-public Reply createReply(@RequestBody ReplyRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-    // 로그인 되어 있는 ID
-    Long userId = userDetails.getUser().getId();
-    Reply reply = ReplyService.createReply(requestDto, userId);
-    // 응답 보내기
-    return reply;
-}
+    @PostMapping("/api/reply")
+    public boolean createReply(@RequestBody ReplyRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        // 로그인 되어 있는 ID
+        if (userDetails != null) {
+            Long userId = userDetails.getUser().getId();
+            Reply reply = ReplyService.createReply(requestDto, userId);
+            return true;
+        }
+        return false;
+    }
 
 
     @PutMapping("/api/reply/{id}")
