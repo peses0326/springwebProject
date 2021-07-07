@@ -10,7 +10,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
     <!--    font-family: 'Jua', sans-serif;-->
     <script>
+        $(document).ready(function () {
+            usercheck();
+        })
 
+        function usercheck() {
+            $.ajax({
+                type: "GET",
+                url: "/api/usercheck",
+                success: function (response) {
+                    let usercheck = response;
+                    if (usercheck == ""){
+                        alert('로그인이 필요합니다>_<')
+                        window.location.replace("/user/login")
+                    }
+                }
+            });
+        }
         function isValidContents(contents) {
             if (contents == '') {
                 alert('내용을 입력해주세요');

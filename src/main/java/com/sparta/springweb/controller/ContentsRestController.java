@@ -32,11 +32,6 @@ public class ContentsRestController {
         return contents;
     }
 
-//    @PostMapping("/api/contents")
-//    public Contents createContents(@RequestBody ContentsRequestDto requestDto) {
-//        Contents Contents = new Contents(requestDto);
-//        return ContentsRepository.save(Contents);
-//    }
     @PostMapping("/api/contents")
     public Contents createContents(@RequestBody ContentsRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 로그인 되어 있는 ID의 username
@@ -56,5 +51,20 @@ public class ContentsRestController {
         ContentsRepository.deleteById(id);
         return id;
     }
+
+    @GetMapping("/api/usercheck")
+    public String usercheck(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails != null) {
+            return userDetails.getUser().getUsername();
+        }
+        return "";
+    }
+
+
+
+
+
+
+
 
 }

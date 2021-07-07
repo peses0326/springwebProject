@@ -9,12 +9,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!--    font-family: 'Jua', sans-serif;-->
     <meta charset="UTF-8">
     <title>로그인 페이지</title>
     <script>
+        $(document).ready(function () {
+            usercheck();
+        })
 
+        function usercheck() {
+            $.ajax({
+                type: "GET",
+                url: "/api/usercheck",
+                success: function (response) {
+                    let usercheck = response;
+                    if (usercheck != ""){
+                        window.location.replace("/")
+                        alert("이미 로그인되었습니다'-')/")
+                    }
+                }
+            });
+        }
     </script>
     <style>
         body {

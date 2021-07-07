@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService {
@@ -34,29 +35,44 @@ public class UserService {
     }
 
 
-    public void registerUser(SignupRequestDto requestDto) {
+    public String registerUser(SignupRequestDto requestDto) {
+        String error = "";
         String username = requestDto.getUsername();
+        String password = requestDto.getPassword();
+        String password2 = requestDto.getPassword2();
+        String email = requestDto.getEmail();
+        UserRole role = UserRole.USER;
         // 회원 ID 중복 확인
         Optional<User> found = userRepository.findByUsername(username);
+
+        String pattern = "^[a-zA-Z0-9]*$";
+
         if (found.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자 ID 가 존재합니다.");
+            return "중복된 id입니다.";
         }
 
+        if (username.length() < 3) {
+            return "닉네임을 3자 이상 입력하세요";
+        } else if (!Pattern.matches(pattern, username)) {
+            return "알파벳 대소문자와 숫자로만 입력하세요";
+        } else if (!password.equals(password2)) {
+            return "비밀번호가 일치하지 않습니다";
+        } else if (password.length() < 3) {
+            return "비밀번호를 3자 이상 입력하세요";
+        } else if (password.contains(username)) {
+            return "비밀번호에 닉네임을 포함할 수 없습니다.";
+        } else if (email.length()<1){
+            return "이메일을 입력하세요";
+        }
         // 패스워드 인코딩
-        String password = passwordEncoder.encode(requestDto.getPassword());
-        String email = requestDto.getEmail();
-        // 사용자 ROLE 확인
-        UserRole role = UserRole.USER;
-        if (requestDto.isAdmin()) {
-            if (!requestDto.getAdminToken().equals(ADMIN_TOKEN)) {
-                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
-            }
-            role = UserRole.ADMIN;
-        }
+        password = passwordEncoder.encode(password);
+        requestDto.setPassword(password);
 
-        User user = new User(username, password, email, role);
+        User user = new User(username,password,email,role);
         userRepository.save(user);
+        return error;
     }
+
 
     public void kakaoLogin(String authorizedCode) {
         // 카카오 OAuth2 를 통해 카카오 사용자 정보 조회

@@ -3,7 +3,6 @@ package com.sparta.springweb.controller;
 import com.sparta.springweb.dto.SignupRequestDto;
 import com.sparta.springweb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.validation.ValidationErrors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,9 +38,14 @@ public class UserController {
 
     // 회원 가입 요청 처리
     @PostMapping("/user/signup")
-    public String registerUser(SignupRequestDto requestDto) {
-        userService.registerUser(requestDto);
-        return "redirect:/user/login";
+    public String registerUser(SignupRequestDto requestDto, Model model) {
+        if (userService.registerUser(requestDto)== ""){
+            userService.registerUser(requestDto);
+            return "login";
+        }else {
+            model.addAttribute("errortext",userService.registerUser(requestDto));
+            return "signup";
+        }
     }
 
     @GetMapping("/user/kakao/callback")
