@@ -21,6 +21,12 @@ public class ReplyService {
 
     @Transactional // 메소드 동작이 SQL 쿼리문임을 선언합니다.
     public Reply createReply(ReplyRequestDto requestDto, Long userId) {
+        String replyCheck = requestDto.getReply();
+        if (replyCheck.contains("script")|| replyCheck.contains("<")||replyCheck.contains(">")){
+            Reply reply = new Reply(requestDto, userId,"안돼요,, 하지마세요ㅠㅠ");
+            ReplyRepository.save(reply);
+            return reply;
+        }
         // 요청받은 DTO 로 DB에 저장할 객체 만들기
         Reply reply = new Reply(requestDto, userId);
         ReplyRepository.save(reply);

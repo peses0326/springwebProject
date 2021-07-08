@@ -26,9 +26,9 @@ public class Contents extends Timestamped {
     @Column(nullable = false)
     private String contents;
 
-    public Contents(String title, String name, String contents) {
+    public Contents(String title, String username, String contents) {
         this.title = title;
-        this.name = name;
+        this.name = username;
         this.contents = contents;
     }
 
@@ -48,5 +48,11 @@ public class Contents extends Timestamped {
         this.title = requestDto.getTitle();
         this.name = requestDto.getName();
         this.contents = requestDto.getContents();
+    }
+
+    public Contents(ContentsRequestDto requestDto, String username,String contents) {
+        this.title = requestDto.getTitle();
+        this.name = username;
+        this.contents = contents;
     }
 }

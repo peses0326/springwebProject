@@ -63,7 +63,9 @@ public class UserService {
             return "비밀번호에 닉네임을 포함할 수 없습니다.";
         } else if (email.length()<1){
             return "이메일을 입력하세요";
-        }
+        }else if (email.contains("<")||email.contains(">")||email.contains("script")){
+        return "안돼요 하지마세요ㅠㅠ";
+    }
         // 패스워드 인코딩
         password = passwordEncoder.encode(password);
         requestDto.setPassword(password);
@@ -72,7 +74,6 @@ public class UserService {
         userRepository.save(user);
         return error;
     }
-
 
     public void kakaoLogin(String authorizedCode) {
         // 카카오 OAuth2 를 통해 카카오 사용자 정보 조회

@@ -17,15 +17,8 @@ import java.util.List;
 @RestController
 public class ReplyRestController {
 
-
     private final ReplyRepository ReplyRepository;
     private final ReplyService ReplyService;
-
-
-//    @GetMapping("/api/reply")
-//    public List<Reply> getReply() {
-//        return ReplyRepository.findAllByOrderByCreatedAtDesc();
-//    }
 
     // 로그인한 회원이 등록한 상품들 조회
     @GetMapping("/api/reply")
@@ -50,7 +43,6 @@ public class ReplyRestController {
         }
         return false;
     }
-
 
     @PutMapping("/api/reply/{id}")
     public Long updateReply(@PathVariable Long id, @RequestBody ReplyRequestDto requestDto) {

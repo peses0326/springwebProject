@@ -59,12 +59,4 @@ public class ContentsRestController {
         }
         return "";
     }
-
-
-
-
-
-
-
-
 }
