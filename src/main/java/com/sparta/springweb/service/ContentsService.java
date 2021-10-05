@@ -1,11 +1,8 @@
 package com.sparta.springweb.service;
 
-import com.sparta.springweb.dto.ReplyRequestDto;
-import com.sparta.springweb.model.Contents;
 import com.sparta.springweb.dto.ContentsRequestDto;
-import com.sparta.springweb.model.Reply;
+import com.sparta.springweb.model.Contents;
 import com.sparta.springweb.repository.ContentsRepository;
-import com.sparta.springweb.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +19,12 @@ public class ContentsService {
         String contentsCheck = requestDto.getContents();
         String titleCheck = requestDto.getTitle();
         if (contentsCheck.contains("script")||contentsCheck.contains("<")||contentsCheck.contains(">")){
-            Contents contents = new Contents(requestDto,username,"안돼요,,하지마세요ㅠㅠ");
+            Contents contents = new Contents(requestDto,username,"xss 안돼요,,하지마세요ㅠㅠ");
             ContentsRepository.save(contents);
             return contents;
         }
         if (titleCheck.contains("script")||titleCheck.contains("<")||titleCheck.contains(">")) {
-            Contents contents = new Contents("안돼요,,하지마세요ㅠㅠ", username, "안돼요,,하지마세요ㅠㅠ");
+            Contents contents = new Contents("xss 안돼요,,하지마세요ㅠㅠ", username, "xss 안돼요,,하지마세요ㅠㅠ");
             ContentsRepository.save(contents);
             return contents;
         }

@@ -37,6 +37,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers("/**").permitAll()
+                // 전부 허용
+                .antMatchers("*").permitAll()
 
                 // 그 외 모든 요청은 인증과정 필요
                 .anyRequest().authenticated()

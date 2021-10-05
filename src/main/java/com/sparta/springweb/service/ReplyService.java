@@ -25,7 +25,7 @@ public class ReplyService {
     public Reply createReply(ReplyRequestDto requestDto, Long userId) {
         String replyCheck = requestDto.getReply();
         if (replyCheck.contains("script")|| replyCheck.contains("<")||replyCheck.contains(">")){
-            Reply reply = new Reply(requestDto, userId,"안돼요,, 하지마세요ㅠㅠ");
+            Reply reply = new Reply(requestDto, userId,"xss 안돼요,, 하지마세요ㅠㅠ");
             ReplyRepository.save(reply);
             return reply;
         }

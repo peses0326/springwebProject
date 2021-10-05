@@ -43,7 +43,6 @@ public class UserController {
     @PostMapping("/user/signup")
     public String registerUser(SignupRequestDto requestDto, Model model) {
         if (userService.registerUser(requestDto).equals("")) {
-            userService.registerUser(requestDto);
             return "login";
         } else {
             model.addAttribute("errortext", userService.registerUser(requestDto));
