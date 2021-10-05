@@ -63,74 +63,6 @@
                         </div>`;
         }
 
-        function editPost(id) {
-            showEdits(id);
-            let username = $(`#${id}-username`).text().trim();
-            let contents = $(`#${id}-textarea`).val().trim();
-            if (isValidContents(contents) == false) {
-                return;
-            }
-            let data = {'username': username, 'contents': contents};
-            $.ajax({
-                type: "PUT",
-                url: `/api/contents/${id}`,
-                contentType: "application/json",
-                data: JSON.stringify(data),
-                success: function (response) {
-                    alert('메시지 변경에 성공하였습니다.');
-                    window.location.reload();
-                }
-            });
-        }
-
-        function showEdits(id) {
-            $(`#${id}-editarea`).show();
-            $(`#${id}-submit`).show();
-            $(`#${id}-delete`).show();
-
-            $(`#${id}-contents`).hide();
-            $(`#${id}-edit`).hide();
-        }
-
-        function hideEdits(id) {
-            $(`#${id}-editarea`).hide();
-            $(`#${id}-submit`).hide();
-            $(`#${id}-delete`).hide();
-
-            $(`#${id}-contents`).show();
-            $(`#${id}-edit`).show();
-        }
-
-        function submitEdit(id) {
-            let name = $(`#${id}-name`).text().trim();
-            let contents = $(`#${id}-textarea`).val().trim();
-            if (isValidContents(contents) == false) {
-                return;
-            }
-            let data = {'name': name, 'contents': contents};
-
-            $.ajax({
-                type: "PUT",
-                url: `/api/contents/${id}`,
-                contentType: "application/json",
-                data: JSON.stringify(data),
-                success: function (response) {
-                    alert('메시지 변경에 성공하였습니다.');
-                    window.location.reload();
-                }
-            });
-        }
-
-        function deleteOne(id) {
-            $.ajax({
-                type: "DELETE",
-                url: `/api/contents/${id}`,
-                success: function (response) {
-                    alert('메시지 삭제에 성공하였습니다.');
-                    window.location.reload();
-                }
-            })
-        }
     </script>
     <style>
         @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
@@ -402,9 +334,6 @@
             <div class="contents">
                 <div id="1-contents" class="text">
                     dsafnkalfklewakflekelafkleajfkleafkldsankflenwaklfnekwlafneklwanfkelawnfkelanfkleanfklew
-                </div>
-                <div id="1-editarea" class="edit">
-                    <!-- 여기 왜 Thymleaf 에러나요???                    <textarea id="1-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>-->
                 </div>
             </div>
 

@@ -3,11 +3,10 @@ package com.sparta.springweb.service;
 
 import com.sparta.springweb.dto.SignupRequestDto;
 import com.sparta.springweb.model.User;
-import com.sparta.springweb.model.UserRole;
 import com.sparta.springweb.repository.UserRepository;
 import com.sparta.springweb.security.kakao.KakaoOAuth2;
 import com.sparta.springweb.security.kakao.KakaoUserInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +18,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
@@ -26,29 +26,19 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
 
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, KakaoOAuth2 kakaoOAuth2, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.kakaoOAuth2 = kakaoOAuth2;
-        this.authenticationManager = authenticationManager;
-    }
-
-
     public String registerUser(SignupRequestDto requestDto) {
         String error = "";
         String username = requestDto.getUsername();
         String password = requestDto.getPassword();
         String password2 = requestDto.getPassword2();
         String email = requestDto.getEmail();
-        UserRole role = UserRole.USER;
         // 회원 ID 중복 확인
         Optional<User> found = userRepository.findByUsername(username);
 
         String pattern = "^[a-zA-Z0-9]*$";
 
         if (found.isPresent()) {
-            return "중복된 id입니다.";
+            return "중복된 id 입니다.";
         }
 
         if (username.length() < 3) {
@@ -57,20 +47,20 @@ public class UserService {
             return "알파벳 대소문자와 숫자로만 입력하세요";
         } else if (!password.equals(password2)) {
             return "비밀번호가 일치하지 않습니다";
-        } else if (password.length() < 3) {
-            return "비밀번호를 3자 이상 입력하세요";
+        } else if (password.length() < 4) {
+            return "비밀번호를 4자 이상 입력하세요";
         } else if (password.contains(username)) {
             return "비밀번호에 닉네임을 포함할 수 없습니다.";
-        } else if (email.length()<1){
+        } else if (email.length() < 1) {
             return "이메일을 입력하세요";
-        }else if (email.contains("<")||email.contains(">")||email.contains("script")){
-        return "안돼요 하지마세요ㅠㅠ";
-    }
+        } else if (email.contains("<") || email.contains(">") || email.contains("script")) {
+            return "안돼요 하지마세요ㅠㅠ";
+        }
         // 패스워드 인코딩
         password = passwordEncoder.encode(password);
         requestDto.setPassword(password);
 
-        User user = new User(username,password,email,role);
+        User user = new User(username, password, email);
         userRepository.save(user);
         return error;
     }
@@ -96,10 +86,8 @@ public class UserService {
         if (kakaoUser == null) {
             // 패스워드 인코딩
             String encodedPassword = passwordEncoder.encode(password);
-            // ROLE = 사용자
-            UserRole role = UserRole.USER;
 
-            kakaoUser = new User(nickname, encodedPassword, email, role, kakaoId);
+            kakaoUser = new User(nickname, encodedPassword, email, kakaoId);
             userRepository.save(kakaoUser);
         }
 

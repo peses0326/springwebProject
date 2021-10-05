@@ -15,11 +15,13 @@ public class ReplyService {
 
     private final ReplyRepository ReplyRepository;
 
+    // 댓글 조회
     public List<Reply> getReply(Long postId) {
         return ReplyRepository.findAllByPostidOrderByCreatedAtDesc(postId);
     }
 
-    @Transactional // 메소드 동작이 SQL 쿼리문임을 선언합니다.
+    // 댓글 작성
+    @Transactional
     public Reply createReply(ReplyRequestDto requestDto, Long userId) {
         String replyCheck = requestDto.getReply();
         if (replyCheck.contains("script")|| replyCheck.contains("<")||replyCheck.contains(">")){
@@ -33,12 +35,12 @@ public class ReplyService {
         return reply;
     }
 
+    // 댓글 수정
     @Transactional
-    public Long update(Long id, ReplyRequestDto requestDto) {
+    public void update(Long id, ReplyRequestDto requestDto) {
         Reply Reply = ReplyRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("존재하지 않습니다.")
         );
         Reply.update(requestDto);
-        return Reply.getId();
     }
 }

@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PageController {
-    // 홈으로 가는 controller : addAttribute 로 username 을 전달 해주고 있다.
 
-    // security가 전달하는 userdetailsImpl 이다.
     @GetMapping("/detail.html")
     public String detail(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         if (userDetails != null) {

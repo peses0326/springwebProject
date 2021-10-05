@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timeline Service</title>
+    <title>바다 위 대나무 숲</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
@@ -177,13 +177,6 @@
             color: #868e96;
         }
 
-        .card {
-            width: 538px;
-            border-radius: 5px;
-            background-color: #ffffff;
-            margin-bottom: 12px;
-        }
-
         .card .metadata {
             position: relative;
             display: flex;
@@ -208,12 +201,6 @@
             margin-left: 20px;
         }
 
-        .contents {
-            padding: 23px;
-            word-wrap: break-word;
-            word-break: break-all;
-        }
-
         .contents div.edit {
             display: none;
         }
@@ -228,39 +215,6 @@
             font-family: 'Spoqa Han Sans';
         }
 
-        .footer {
-            position: relative;
-            height: 40px;
-        }
-
-        .footer img.icon-start-edit {
-            cursor: pointer;
-            position: absolute;
-            bottom: 14px;
-            right: 55px;
-            width: 18px;
-            height: 18px;
-        }
-
-        .footer img.icon-end-edit {
-            cursor: pointer;
-            position: absolute;
-            display: none;
-            bottom: 14px;
-            right: 55px;
-            width: 20px;
-            height: 15px;
-        }
-
-        .footer img.icon-delete {
-            cursor: pointer;
-            position: absolute;
-            bottom: 12px;
-            right: 19px;
-            width: 14px;
-            height: 18px;
-        }
-
         .form-control {
             height: 30px;
             margin-bottom: 10px;
@@ -268,9 +222,6 @@
             border-radius: 10px;
         }
 
-        #cards-box {
-            margin-top: 12px;
-        }
         #logout-text, #login-text, #signup-text {
             text-decoration: none;
             color: #FFA547;
@@ -307,11 +258,9 @@
     <div class="area-write">
         <div class="form-floating mb-3">
             <input type="title" class="form-control" id="title" placeholder="제 목">
-            <!--            <input type="name" class="form-control" id="name" placeholder="닉네임">-->
         </div>
         <textarea class="field" placeholder="공유하고 싶은 소식을 입력해주세요" name="contents" id="contents" cols="30"
                   rows="10"></textarea>
-        <!--            <button class="btn btn-danger" onclick="writePost()">작성하기</button>-->
         <img src="images/send.png" alt="" onclick="writePost()">
     </div>
 </div>

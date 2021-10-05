@@ -15,7 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-public class ReplyRestController {
+public class ReplyController {
 
     private final ReplyRepository ReplyRepository;
     private final ReplyService ReplyService;
@@ -33,23 +33,26 @@ public class ReplyRestController {
         return ReplyService.getReply(postId);
     }
 
+    // 댓글 작성
     @PostMapping("/api/reply")
     public boolean createReply(@RequestBody ReplyRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         // 로그인 되어 있는 ID
         if (userDetails != null) {
             Long userId = userDetails.getUser().getId();
-            Reply reply = ReplyService.createReply(requestDto, userId);
+            ReplyService.createReply(requestDto, userId);
             return true;
         }
         return false;
     }
 
+    // 댓글 수정
     @PutMapping("/api/reply/{id}")
     public Long updateReply(@PathVariable Long id, @RequestBody ReplyRequestDto requestDto) {
         ReplyService.update(id, requestDto);
         return id;
     }
 
+    // 댓글 삭제
     @DeleteMapping("/api/reply/{id}")
     public Long deleteReply(@PathVariable Long id) {
         ReplyRepository.deleteById(id);

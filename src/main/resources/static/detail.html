@@ -21,7 +21,7 @@
         function getMessages() {
             $('#cards-box').empty();
             $('#reply-box').empty();
-            let idx = location.href.split("id=")[1]; //[앞부분] [2] localhos/modify.html?id=12&address=seoul&
+            let idx = location.href.split("id=")[1];
             $.ajax({
                 type: "GET",
                 url: `/api/contents/${idx}`,
@@ -116,9 +116,9 @@
         function makeReply(id, username, reply, modifiedAt) {
             let loginUsername = [[${username}]];
             console.log(loginUsername)
-            let hide = ""
-            if (loginUsername != username) {
-                hide = "hide"
+            let hide = "hide"
+            if (loginUsername == username) {
+                hide = ""
             }
             return `<div class="card">
                         <div class="metadata">
@@ -186,7 +186,7 @@
         // 글이 정상인지 확인
         function isValidContents(contents) {
             if (contents == '') {
-                alert('내용을 입력해주세요');
+                alert('댓글 내용을 입력해주세요');
                 return false;
             }
             return true;
